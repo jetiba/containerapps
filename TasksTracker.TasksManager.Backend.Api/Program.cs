@@ -1,8 +1,16 @@
 using TasksTracker.TasksManager.Backend.Api.Services;
+using Microsoft.ApplicationInsights.Extensibility;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+builder.Services.AddApplicationInsightsTelemetry();
+builder.Services.Configure<TelemetryConfiguration>(
+    (o) => {
+        o.TelemetryInitializers.Add(new TasksTracker.TasksManager.Backend.Api.AppInsightsTelemetryInitializer());
+    });
+
 builder.Services.AddDaprClient();
 builder.Services.AddSingleton<ITasksManager, TasksStoreManager>();
 // builder.Services.AddSingleton<ITasksManager, FakeTasksManager>();

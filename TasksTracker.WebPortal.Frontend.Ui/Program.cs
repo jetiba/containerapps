@@ -1,6 +1,14 @@
+using Microsoft.ApplicationInsights.Extensibility;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+
+builder.Services.AddApplicationInsightsTelemetry();
+builder.Services.Configure<TelemetryConfiguration>((o) => {
+    o.TelemetryInitializers.Add(new TasksTracker.WebPortal.Frontend.Ui.AppInsightsTelemetryInitializer());
+});
+
 builder.Services.AddRazorPages();
 
 builder.Services.AddDaprClient();

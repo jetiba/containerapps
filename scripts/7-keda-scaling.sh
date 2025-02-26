@@ -31,3 +31,15 @@ az containerapp update \
                     "namespace=$SERVICE_BUS_NAMESPACE_NAME" \
                     "messageCount=10" \
                     "connectionFromEnv=svcbus-connstring"
+
+az containerapp update \
+  --resource-group $RESOURCE_GROUP \
+  --name $BACKEND_SERVICE_NAME \
+  --revision-suffix v$TODAY-6 \
+  --scale-rule-name "topic-msgs-length" \
+  --scale-rule-type "azure-servicebus" \
+  --scale-rule-metadata "topicName=$SERVICE_BUS_TOPIC_NAME" \
+                    "subscriptionName=$SERVICE_BUS_TOPIC_SUBSCRIPTION" \
+                    "namespace=$SERVICE_BUS_NAMESPACE_NAME" \
+                    "messageCount=10" \
+  --scale-rule-identity <USER_ASSIGNED_IDENTITY_ID>
