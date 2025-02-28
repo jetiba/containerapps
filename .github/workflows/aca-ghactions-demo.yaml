@@ -25,13 +25,13 @@ jobs:
 
       - name: Build Backend API Container Image
         run: |
-          az acr build --registry ${{ vars.AZURE_CONTAINER_REGISTRY_NAME }} --image ${{ vars.BACKEND_API_NAME }}:${{ github.sha }} ./TasksTracker.TasksManager.Backend.Api
+          az acr build --registry ${{ vars.AZURE_CONTAINER_REGISTRY_NAME }} --image ${{ vars.BACKEND_API_NAME }}:${{ github.sha }} --file "TasksTracker.TasksManager.Backend.Api/Dockerfile" .
       - name: Build Frontend WebApp Container Image
         run: |
-          az acr build --registry ${{ vars.AZURE_CONTAINER_REGISTRY_NAME }} --image ${{ vars.FRONTEND_WEBAPP_NAME }}:${{ github.sha }} ./TasksTracker.WebPortal.Frontend.Ui
+          az acr build --registry ${{ vars.AZURE_CONTAINER_REGISTRY_NAME }} --image ${{ vars.FRONTEND_WEBAPP_NAME }}:${{ github.sha }} --file "TasksTracker.WebPortal.Frontend.Ui/Dockerfile" .
       - name: Build Backend Service Container Image
         run: |
-          az acr build --registry ${{ vars.AZURE_CONTAINER_REGISTRY_NAME }} --image ${{ vars.BACKEND_SERVICE_NAME }}:${{ github.sha }} ./TasksTracker.Processor.Backend.Svc
+          az acr build --registry ${{ vars.AZURE_CONTAINER_REGISTRY_NAME }} --image ${{ vars.BACKEND_SERVICE_NAME }}:${{ github.sha }} --file "TasksTracker.Processor.Backend.Svc/Dockerfile" .
   deploy_container_apps:
     runs-on: ubuntu-latest
     needs: build_container_images
