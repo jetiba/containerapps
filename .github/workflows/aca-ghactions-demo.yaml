@@ -49,8 +49,8 @@ jobs:
       - name: Build and deploy Backend API Container App
         uses: azure/container-apps-deploy-action@v2
         with:
-          imageToDeploy: ${{ vars.AZURE_CONTAINER_REGISTRY_NAME }}.azurecr.io/${{ vars.BACKEND_SERVICE_NAME }}:${{ github.sha }}
-          containerAppName: ${{ vars.BACKEND_CONTAINER_APP_NAME }}
+          imageToDeploy: ${{ vars.AZURE_CONTAINER_REGISTRY_NAME }}.azurecr.io/${{ vars.BACKEND_API_NAME }}:${{ github.sha }}
+          containerAppName: ${{ vars.BACKEND_API_NAME }}
           resourceGroup: ${{ vars.RESOURCE_GROUP }}
       - name: Build and deploy Frontend WebApp Container App
         uses: azure/container-apps-deploy-action@v2
