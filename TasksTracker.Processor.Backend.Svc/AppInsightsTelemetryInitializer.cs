@@ -10,7 +10,7 @@ namespace TasksTracker.Processor.Backend.Svc
             if (string.IsNullOrEmpty(telemetry.Context.Cloud.RoleName))
             {
                 //set custom role name here
-                telemetry.Context.Cloud.RoleName = "tasksmanager-backend-svc";
+                telemetry.Context.Cloud.RoleName = "tasksmanager-backend-processor";
             }
         }
     }
