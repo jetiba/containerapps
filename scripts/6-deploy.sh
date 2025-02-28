@@ -56,6 +56,6 @@ az ad sp create-for-rbac --display-name $SP_NAME \
     --role contributor \
     --scopes /subscriptions/$SUBSCRIPTION_ID/resourceGroups/$RESOURCE_GROUP
 
-$SP_ID=$(az ad app list --display-name $SP_NAME --query [].appId -o tsv)
+export SP_ID=$(az ad app list --display-name $SP_NAME --query [].appId -o tsv)
 
 az ad app federated-credential create --id $SP_ID --parameters credential.json
