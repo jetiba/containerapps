@@ -1,5 +1,8 @@
 using Dapr.Client;
 using TasksTracker.TasksManager.Backend.Api.Models;
+using System.Text.Json;
+using System.Text.Encodings.Web;
+using System.Text.Json.Serialization;
 
 namespace TasksTracker.TasksManager.Backend.Api.Services
 {
@@ -104,5 +107,53 @@ namespace TasksTracker.TasksManager.Backend.Api.Services
             taskModel.TaskId, taskModel.TaskName, taskModel.TaskAssignedTo);
             await _daprClient.PublishEventAsync("dapr-pubsub-servicebus", "tasksavedtopic", taskModel);
         }
+
+        public async Task<List<TaskModel>> GetYesterdaysDueTasks()
+        {
+            var options = new JsonSerializerOptions
+            {
+                PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+                WriteIndented = true,
+                Converters =
+                {
+                    new JsonStringEnumConverter(),
+                    new DateTimeConverter("yyyy-MM-ddTHH:mm:ss")
+                },
+                PropertyNameCaseInsensitive = true,
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+                Encoder = JavaScriptEncoder.UnsafeRelaxedJsonEscaping
+            };
+            var yesterday = DateTime.Today.AddDays(-1);
+
+            var jsonDate = JsonSerializer.Serialize(yesterday, options);
+
+            _logger.LogInformation("Getting overdue tasks for yesterday date: '{0}'", jsonDate);
+
+            var query = "{" +
+                    "\"filter\": {" +
+                        "\"EQ\": { \"taskDueDate\": " + jsonDate + " }" +
+                    "}}";
+
+            var queryResponse = await _daprClient.QueryStateAsync<TaskModel>(STORE_NAME, query);
+
+            var tasksList = queryResponse.Results
+                             .Where(q => q.Data != null)         // filter null data
+                             .Select(q => q.Data)
+                             .Where(q => q!.IsCompleted == false && q.IsOverDue == false)
+                             .OrderBy(o => o!.TaskCreatedOn);
+
+            return tasksList.ToList()!;
+        }
+
+        public async Task MarkOverdueTasks(List<TaskModel> overDueTasksList)
+        {
+            foreach (var taskModel in overDueTasksList)
+            {
+                _logger.LogInformation("Mark task with Id: '{0}' as OverDue task", taskModel.TaskId);
+                taskModel.IsOverDue = true;
+                await _daprClient.SaveStateAsync<TaskModel>(STORE_NAME, taskModel.TaskId.ToString(), taskModel);
+            }
+        }
+
     }
 }

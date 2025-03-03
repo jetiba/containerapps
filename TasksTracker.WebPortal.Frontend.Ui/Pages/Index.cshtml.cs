@@ -8,16 +8,20 @@ namespace TasksTracker.WebPortal.Frontend.Ui.Pages
     public class IndexModel : PageModel
     {
         private readonly ILogger<IndexModel> _logger;
+        private readonly IConfiguration _configuration;
         [BindProperty]
         public string? TasksCreatedBy { get; set; }
+        public string? EnvRegion { get; set; }
 
-        public IndexModel(ILogger<IndexModel> logger)
+        public IndexModel(ILogger<IndexModel> logger, IConfiguration configuration)
         {
             _logger = logger;
+            _configuration = configuration;
         }
 
         public void OnGet()
         {
+            EnvRegion = _configuration["Region"];
         }
 
         public IActionResult OnPost()
