@@ -9,6 +9,8 @@ namespace TasksTracker.WebPortal.Frontend.Ui.Pages.Tasks
     {
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly DaprClient _daprClient;
+
+        private readonly IConfiguration _configuration;
         public List<TaskModel>? TasksList { get; set; }
 
         [BindProperty]

@@ -13,6 +13,8 @@ public class ErrorModel : PageModel
     public bool ShowRequestId => !string.IsNullOrEmpty(RequestId);
 
     private readonly ILogger<ErrorModel> _logger;
+    private readonly IConfiguration _configuration;
+
     public string? EnvRegion { get; set; }
 
     public ErrorModel(ILogger<ErrorModel> logger, IConfiguration configuration)

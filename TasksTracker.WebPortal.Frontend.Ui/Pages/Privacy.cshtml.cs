@@ -6,6 +6,7 @@ namespace TasksTracker.WebPortal.Frontend.Ui.Pages;
 public class PrivacyModel : PageModel
 {
     private readonly ILogger<PrivacyModel> _logger;
+    private readonly IConfiguration _configuration;
     public string? EnvRegion { get; set; }
 
     public PrivacyModel(ILogger<PrivacyModel> logger, IConfiguration configuration)
