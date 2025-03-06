@@ -10,15 +10,20 @@ namespace TasksTracker.WebPortal.Frontend.Ui.Pages.Tasks
         private readonly IHttpClientFactory _httpClientFactory;
         private readonly DaprClient _daprClient;
 
-        public CreateModel(IHttpClientFactory httpClientFactory, DaprClient daprClient)
+        public string? EnvRegion { get; set; }
+
+        public CreateModel(IHttpClientFactory httpClientFactory, DaprClient daprClient, IConfiguration configuration)
         {
             _httpClientFactory = httpClientFactory;
             _daprClient = daprClient;
+            _configuration = configuration;
         }
         public string? TasksCreatedBy { get; set; }
 
         public IActionResult OnGet()
         {
+            EnvRegion = _configuration["Region"];
+            
             TasksCreatedBy = Request.Cookies["TasksCreatedByCookie"];
 
             return (!String.IsNullOrEmpty(TasksCreatedBy)) ? Page() : RedirectToPage("../Index");

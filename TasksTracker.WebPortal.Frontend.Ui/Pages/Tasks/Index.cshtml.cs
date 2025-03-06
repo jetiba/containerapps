@@ -14,14 +14,18 @@ namespace TasksTracker.WebPortal.Frontend.Ui.Pages.Tasks
         [BindProperty]
         public string? TasksCreatedBy { get; set; }
 
-        public IndexModel(IHttpClientFactory httpClientFactory, DaprClient daprClient)
+        public string? EnvRegion { get; set; }
+
+        public IndexModel(IHttpClientFactory httpClientFactory, DaprClient daprClient, IConfiguration configuration)
         {
             _httpClientFactory = httpClientFactory;
             _daprClient = daprClient;    
+            _configuration = configuration;
         }
 
         public async Task<IActionResult> OnGetAsync()
         {
+            EnvRegion = _configuration["Region"];
             TasksCreatedBy = Request.Cookies["TasksCreatedByCookie"];
 
             if (!String.IsNullOrEmpty(TasksCreatedBy)) {
